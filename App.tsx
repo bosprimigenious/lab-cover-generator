@@ -82,7 +82,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gray-200">
+    <div className="flex flex-col md:flex-row h-screen bg-gray-200 overflow-hidden">
       {/* Sidebar Control Panel */}
       <Sidebar 
         data={data}
@@ -96,7 +96,7 @@ const App: React.FC = () => {
       />
 
       {/* Preview Area */}
-      <main className="flex-grow overflow-hidden relative">
+      <main className="flex-1 overflow-hidden relative min-h-0">
         <ZoomablePreview>
           <CoverPreview ref={coverRef} data={data} config={config} />
         </ZoomablePreview>
