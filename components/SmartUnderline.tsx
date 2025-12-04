@@ -49,7 +49,7 @@ export const SmartUnderline: React.FC<SmartUnderlineProps> = ({
           textAlign: align,
         }}
       >
-        <span className="font-serif">{value}</span>
+        <span className="font-serif font-bold">{value}</span>
       </div>
     </div>
   );
