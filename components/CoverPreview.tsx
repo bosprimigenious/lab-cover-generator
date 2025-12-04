@@ -22,11 +22,11 @@ export const CoverPreview = forwardRef<HTMLDivElement, CoverPreviewProps>(({ dat
       */}
       <div 
         ref={ref}
-        className="bg-white text-black shadow-2xl print:shadow-none w-[210mm] h-[297mm] p-[25mm] flex flex-col items-center relative box-border"
+        className="bg-white text-black shadow-2xl print:shadow-none w-[210mm] h-[297mm] p-[36mm] flex flex-col items-center relative box-border"
         style={{ fontFamily: '"Times New Roman", "SimSun", "Noto Serif SC", serif' }}
       >
         {/* 1. Top Header Image (University Name) */}
-        <div className="mb-10 flex justify-center">
+        <div className="flex justify-center">
           <img src="/assets/bupt-title.png" alt="北京邮电大学" className="w-[13.1cm] object-contain" />
         </div>
 
@@ -93,7 +93,7 @@ export const CoverPreview = forwardRef<HTMLDivElement, CoverPreviewProps>(({ dat
         </div>
 
         {/* 5. Footer Date */}
-        <div className="mt-auto mb-10 text-[14pt] font-bold flex gap-2">
+        <div className="mt-auto mb-30 text-[14pt] font-bold flex gap-2">
             <span>{data.dateYear || '____'}</span>
             <span>年</span>
             <span>{data.dateMonth || '__'}</span>
