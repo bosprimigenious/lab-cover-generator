@@ -55,7 +55,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <div className="w-full md:w-96 bg-gray-50 border-r border-gray-200 h-screen overflow-y-auto flex flex-col shadow-xl z-10">
       <div className="p-6 bg-white border-b border-gray-200 sticky top-0 z-20">
         <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-          <Settings className="w-5 h-5" />
           Cover Config
         </h2>
         <p className="text-xs text-gray-500 mt-1">BUPT Standard Lab Report Style</p>

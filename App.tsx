@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { CoverPreview } from './components/CoverPreview';
+import { ZoomablePreview } from './components/ZoomablePreview';
 import { CoverData, SmartLineConfig } from './types';
 import { generateCoverPDF, generateCoverPDFViaPrint, mergePdf, downloadBlob } from './services/pdfService';
 import html2canvas from 'html2canvas';
@@ -95,8 +96,10 @@ const App: React.FC = () => {
       />
 
       {/* Preview Area */}
-      <main className="flex-grow p-8 overflow-auto flex items-start justify-center">
-        <CoverPreview ref={coverRef} data={data} config={config} />
+      <main className="flex-grow overflow-hidden relative">
+        <ZoomablePreview>
+          <CoverPreview ref={coverRef} data={data} config={config} />
+        </ZoomablePreview>
       </main>
     </div>
   );
