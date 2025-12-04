@@ -74,7 +74,6 @@ lab-cover-generator/
 - **jsPDF** - PDF 生成
 - **pdf-lib** - PDF 合并
 - **Lucide React** - 图标库
-```
 
 
 ## 🙏 致谢
