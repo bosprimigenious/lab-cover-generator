@@ -55,7 +55,7 @@ export const CoverPreview = forwardRef<HTMLDivElement, CoverPreviewProps>(({ dat
           </div>
 
           {/* Student Details Block */}
-          <div className="flex flex-col space-y-4 items-center">
+          <div className="flex flex-col space-y-4 items-start pl-[15%]">
              
              <SmartUnderline 
                label="班　　级：" 
@@ -84,7 +84,7 @@ export const CoverPreview = forwardRef<HTMLDivElement, CoverPreviewProps>(({ dat
             <SmartUnderline 
                label="学　　院：" 
                value={data.department} 
-               minWidth="300px"
+               minWidth={config.fieldMinWidth}
                labelWidth="80px"
                fontSize="text-[14pt]" 
              />

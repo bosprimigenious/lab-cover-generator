@@ -29,7 +29,7 @@ export const SmartUnderline: React.FC<SmartUnderlineProps> = ({
     <div className={`flex items-baseline gap-2 ${className} ${fontSize}`}>
       {label && (
         <span 
-          className="font-serif leading-normal whitespace-nowrap text-justify-last font-bold"
+          className="font-serif leading-normal whitespace-nowrap font-bold flex-shrink-0"
           style={{ width: labelWidth }}
         >
           {label}
@@ -43,10 +43,9 @@ export const SmartUnderline: React.FC<SmartUnderlineProps> = ({
         leading-normal: prevents clipping of descenders
       */}
       <div 
-        className="border-b-[1.5px] border-black px-2 pb-2 leading-normal"
+        className="border-b-[1.5px] border-black px-2 pb-2 leading-normal text-center"
         style={{ 
           minWidth: minWidth,
-          textAlign: align,
         }}
       >
         <span className="font-serif font-bold">{value}</span>

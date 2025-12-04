@@ -26,7 +26,7 @@ const App: React.FC = () => {
 
   const [config, setConfig] = useState<SmartLineConfig>({
     titleMinWidth: '350px',
-    fieldMinWidth: '200px',
+    fieldMinWidth: '250px',
   });
 
   // Handler: Download PNG
