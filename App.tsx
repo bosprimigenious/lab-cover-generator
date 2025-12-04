@@ -22,7 +22,7 @@ const App: React.FC = () => {
     course: '网络安全',
     className: '2024233333',
     studentId: '2022114514',
-    name: '井芹 仁菜',
+    name: '井芹  仁菜',
     department: '计算机学院（国家示范性软件学院）',
     dateYear: currentYear,
     dateMonth: currentMonth,
@@ -96,10 +96,16 @@ const App: React.FC = () => {
       />
 
       {/* Preview Area */}
-      <main className="flex-1 overflow-hidden relative min-h-0">
-        <ZoomablePreview>
-          <CoverPreview ref={coverRef} data={data} config={config} />
-        </ZoomablePreview>
+      <main className="flex-1 overflow-hidden relative min-h-0 flex flex-col">
+        <div className="flex-1 min-h-0">
+          <ZoomablePreview>
+            <CoverPreview ref={coverRef} data={data} config={config} />
+          </ZoomablePreview>
+        </div>
+        {/* Copyright */}
+        <div className="text-center text-xs text-gray-500 py-2 bg-gray-200 border-t border-gray-300">
+          © 2025 Lab Cover Generator | Made with ❤️ by Rikka | GitHub <a href="https://github.com/NoNormalCreeper/lab-cover-generator" className="underline" target="_blank" rel="noopener noreferrer">repository</a>
+        </div>
       </main>
     </div>
   );
