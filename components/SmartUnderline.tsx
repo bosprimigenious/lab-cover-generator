@@ -39,10 +39,11 @@ export const SmartUnderline: React.FC<SmartUnderlineProps> = ({
         The actual underline container.
         flex-grow: allows it to take remaining space if needed (optional behavior)
         min-width: ensures strict adherence to the requested line length
+        pb-2: increased padding to prevent line from crossing text
         leading-normal: prevents clipping of descenders
       */}
       <div 
-        className="border-b-[1.5px] border-black px-2 leading-normal text-center whitespace-pre-wrap"
+        className="border-b-[1.5px] border-black px-2 pb-2 leading-normal text-center whitespace-pre-wrap"
         style={{ 
           minWidth: minWidth,
         }}
