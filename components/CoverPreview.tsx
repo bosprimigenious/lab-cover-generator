@@ -26,8 +26,8 @@ export const CoverPreview = forwardRef<HTMLDivElement, CoverPreviewProps>(({ dat
         style={{ fontFamily: '"Times New Roman", "SimSun", "Noto Serif SC", serif' }}
       >
         {/* 1. Top Header Image (University Name) */}
-        <div className="w-[80%] h-[80px] mb-10 flex justify-center">
-          <img src="/assets/bupt-title.png" alt="北京邮电大学" className="h-full object-contain" />
+        <div className="mb-10 flex justify-center">
+          <img src="/assets/bupt-title.png" alt="北京邮电大学" className="w-[13.1cm] object-contain" />
         </div>
 
         {/* 2. Main Title */}
@@ -36,8 +36,8 @@ export const CoverPreview = forwardRef<HTMLDivElement, CoverPreviewProps>(({ dat
         </div>
 
         {/* 3. Logo */}
-        <div className="w-[120px] h-[120px] mb-16">
-          <img src="/assets/bupt-logo.png" alt="Logo" className="w-full h-full object-contain" />
+        <div className="mb-16">
+          <img src="/assets/bupt-logo.png" alt="Logo" className="w-[3.48cm] object-contain" />
         </div>
 
         {/* 4. Form Area */}
