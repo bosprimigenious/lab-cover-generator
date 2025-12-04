@@ -104,7 +104,7 @@ const App: React.FC = () => {
         </div>
         {/* Copyright */}
         <div className="text-center text-xs text-gray-500 py-2 bg-gray-200 border-t border-gray-300">
-          © 2025 Lab Cover Generator | Made with ❤️ by Rikka | GitHub <a href="https://github.com/NoNormalCreeper/lab-cover-generator" className="underline" target="_blank" rel="noopener noreferrer">repository</a>
+          © 2025 Lab Cover Generator | Made with ❤️ by Rikka | <a href="https://github.com/NoNormalCreeper/lab-cover-generator" className="underline" target="_blank" rel="noopener noreferrer">GitHub repository</a>
         </div>
       </main>
     </div>
