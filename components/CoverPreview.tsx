@@ -32,7 +32,7 @@ export const CoverPreview = forwardRef<HTMLDivElement, CoverPreviewProps>(({ dat
 
         {/* 2. Main Title */}
         <div className="mb-8">
-            <h2 className="text-[32pt] font-bold text-center">实验报告</h2>
+            <h2 className="text-[32pt] font-bold text-center" style={{ fontFamily: '"SimHei", "Heiti SC", "Noto Sans SC", "Microsoft YaHei", sans-serif' }}>实验报告</h2>
         </div>
 
         {/* 3. Logo */}
