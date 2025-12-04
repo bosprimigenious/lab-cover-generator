@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { CoverData, SmartLineConfig } from '../types';
-import { Download, FileText, Image as ImageIcon, Settings, Upload } from 'lucide-react';
+import { Download, FileText, Image as ImageIcon, Settings, Upload, Printer } from 'lucide-react';
 
 interface SidebarProps {
   data: CoverData;
@@ -8,6 +8,7 @@ interface SidebarProps {
   config: SmartLineConfig;
   setConfig: React.Dispatch<React.SetStateAction<SmartLineConfig>>;
   onDownloadImage: () => void;
+  onPrintPdf: () => void;
   onMergePdf: (file: File) => void;
   isProcessing: boolean;
 }
@@ -18,6 +19,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   config,
   setConfig,
   onDownloadImage,
+  onPrintPdf,
   onMergePdf,
   isProcessing
 }) => {
@@ -197,6 +199,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
         >
           <Download className="w-5 h-5 mr-2" />
           Download Cover Image (PNG)
+        </button>
+
+        <button 
+            onClick={onPrintPdf}
+            disabled={isProcessing}
+            className="w-full flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition-colors font-medium disabled:opacity-50"
+        >
+          <Printer className="w-5 h-5 mr-2" />
+          Print / Save as PDF
         </button>
 
         <div className="relative">

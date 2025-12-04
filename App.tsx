@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { CoverPreview } from './components/CoverPreview';
 import { CoverData, SmartLineConfig } from './types';
-import { generateCoverPDF, mergePdf, downloadBlob } from './services/pdfService';
+import { generateCoverPDF, generateCoverPDFViaPrint, mergePdf, downloadBlob } from './services/pdfService';
 import html2canvas from 'html2canvas';
 
 const App: React.FC = () => {
@@ -53,6 +53,12 @@ const App: React.FC = () => {
     }
   };
 
+  // Handler: Print PDF (uses browser's native print for accurate rendering)
+  const handlePrintPdf = () => {
+    if (!coverRef.current) return;
+    generateCoverPDFViaPrint(coverRef.current);
+  };
+
   // Handler: Merge PDF
   const handleMergePdf = async (file: File) => {
     if (!coverRef.current) return;
@@ -83,6 +89,7 @@ const App: React.FC = () => {
         config={config}
         setConfig={setConfig}
         onDownloadImage={handleDownloadImage}
+        onPrintPdf={handlePrintPdf}
         onMergePdf={handleMergePdf}
         isProcessing={isProcessing}
       />

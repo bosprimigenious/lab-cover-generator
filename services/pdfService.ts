@@ -1,12 +1,90 @@
-import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { PDFDocument } from 'pdf-lib';
 
 /**
- * Captures the cover element and returns it as a jsPDF object
+ * Generates PDF using browser's native print functionality
+ * This creates a new window with the cover content and triggers print dialog
+ */
+export const generateCoverPDFViaPrint = (element: HTMLElement): void => {
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    alert('Please allow popups to generate PDF');
+    return;
+  }
+
+  // Get all stylesheets from the current document
+  const styles = Array.from(document.styleSheets)
+    .map(styleSheet => {
+      try {
+        return Array.from(styleSheet.cssRules)
+          .map(rule => rule.cssText)
+          .join('\n');
+      } catch (e) {
+        // Handle cross-origin stylesheets
+        if (styleSheet.href) {
+          return `@import url("${styleSheet.href}");`;
+        }
+        return '';
+      }
+    })
+    .join('\n');
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Lab Report Cover</title>
+        <style>
+          ${styles}
+          @media print {
+            @page {
+              size: A4;
+              margin: 0;
+            }
+            body {
+              margin: 0;
+              padding: 0;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            .print-container {
+              width: 210mm;
+              height: 297mm;
+            }
+          }
+          body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            background: white;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="print-container">
+          ${element.outerHTML}
+        </div>
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+  
+  // Wait for content to load then print
+  printWindow.onload = () => {
+    setTimeout(() => {
+      printWindow.print();
+    }, 250);
+  };
+};
+
+/**
+ * Captures the cover element and returns it as a jsPDF object using html2canvas
  */
 export const generateCoverPDF = async (element: HTMLElement): Promise<ArrayBuffer> => {
-  // High scale for crisp text
+  // Use dom-to-image or similar for better rendering
+  const { default: html2canvas } = await import('html2canvas');
+  
   const canvas = await html2canvas(element, {
     scale: 2,
     useCORS: true,
