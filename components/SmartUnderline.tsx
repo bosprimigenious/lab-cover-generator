@@ -47,7 +47,7 @@ export const SmartUnderline: React.FC<SmartUnderlineProps> = ({
           minWidth: minWidth,
         }}
       >
-        <span className="font-serif font-bold">{value}</span>
+        <span className="font-serif font-bold">{value || '\u00A0'}</span>
       </div>
     </div>
   );
