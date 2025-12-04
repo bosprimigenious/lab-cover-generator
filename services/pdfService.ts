@@ -82,8 +82,22 @@ export const generateCoverPDFViaPrint = (element: HTMLElement): void => {
  * Captures the cover element and returns it as a jsPDF object using html2canvas
  */
 export const generateCoverPDF = async (element: HTMLElement): Promise<ArrayBuffer> => {
-  // Use dom-to-image or similar for better rendering
   const { default: html2canvas } = await import('html2canvas');
+  
+  // Find the parent with transform and temporarily remove it
+  let transformParent: HTMLElement | null = null;
+  let originalTransform = '';
+  let parent = element.parentElement;
+  while (parent) {
+    const style = window.getComputedStyle(parent);
+    if (style.transform && style.transform !== 'none') {
+      transformParent = parent;
+      originalTransform = parent.style.transform;
+      parent.style.transform = 'none';
+      break;
+    }
+    parent = parent.parentElement;
+  }
   
   const canvas = await html2canvas(element, {
     scale: 2,
@@ -91,6 +105,11 @@ export const generateCoverPDF = async (element: HTMLElement): Promise<ArrayBuffe
     logging: false,
     backgroundColor: '#ffffff',
   });
+
+  // Restore transform
+  if (transformParent) {
+    transformParent.style.transform = originalTransform;
+  }
 
   const imgData = canvas.toDataURL('image/png');
   

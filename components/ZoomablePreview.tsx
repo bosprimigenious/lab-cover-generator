@@ -1,9 +1,13 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { ZoomIn, ZoomOut, RotateCcw, Move } from 'lucide-react';
+import { ZoomIn, ZoomOut, RotateCcw, Move, Maximize } from 'lucide-react';
 
 interface ZoomablePreviewProps {
   children: React.ReactNode;
 }
+
+// A4 size in pixels at 96 DPI (210mm x 297mm)
+const A4_WIDTH_PX = 794;
+const A4_HEIGHT_PX = 1123;
 
 export const ZoomablePreview: React.FC<ZoomablePreviewProps> = ({ children }) => {
   const [scale, setScale] = useState(0.5);
@@ -29,9 +33,28 @@ export const ZoomablePreview: React.FC<ZoomablePreviewProps> = ({ children }) =>
     setPosition({ x: 0, y: 0 });
   }, []);
 
+  const handleFitToScreen = useCallback(() => {
+    if (!containerRef.current) return;
+    
+    const container = containerRef.current;
+    const containerWidth = container.clientWidth;
+    const containerHeight = container.clientHeight;
+    
+    // Use fixed A4 dimensions for calculation
+    const padding = 40;
+    const scaleX = (containerWidth - padding * 2) / A4_WIDTH_PX;
+    const scaleY = (containerHeight - padding * 2) / A4_HEIGHT_PX;
+    const fitScale = Math.min(scaleX, scaleY, MAX_SCALE);
+    
+    setScale(Math.max(fitScale, MIN_SCALE));
+    setPosition({ x: 0, y: 0 });
+  }, []);
+
+  // Use Shift+scroll for zooming to avoid conflict with page scroll
   const handleWheel = useCallback((e: React.WheelEvent) => {
-    if (e.ctrlKey || e.metaKey) {
+    if (e.shiftKey) {
       e.preventDefault();
+      e.stopPropagation();
       const delta = e.deltaY > 0 ? -SCALE_STEP : SCALE_STEP;
       setScale(prev => Math.min(Math.max(prev + delta, MIN_SCALE), MAX_SCALE));
     }
@@ -39,6 +62,7 @@ export const ZoomablePreview: React.FC<ZoomablePreviewProps> = ({ children }) =>
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (e.button === 0) { // Left click
+      e.preventDefault();
       setIsDragging(true);
       setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
     }
@@ -64,27 +88,50 @@ export const ZoomablePreview: React.FC<ZoomablePreviewProps> = ({ children }) =>
   // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Avoid triggering when typing in input fields
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
       if (e.key === '+' || e.key === '=') {
         handleZoomIn();
       } else if (e.key === '-') {
         handleZoomOut();
       } else if (e.key === '0') {
         handleReset();
+      } else if (e.key === 'f' || e.key === 'F') {
+        handleFitToScreen();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleZoomIn, handleZoomOut, handleReset]);
+  }, [handleZoomIn, handleZoomOut, handleReset, handleFitToScreen]);
+
+  // Fit to screen on initial mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      handleFitToScreen();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [handleFitToScreen]);
+
+  // Listen for window resize
+  useEffect(() => {
+    const handleResize = () => {
+      handleFitToScreen();
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [handleFitToScreen]);
 
   return (
-    <div className="relative w-full h-full flex flex-col">
-      {/* Control Bar */}
-      <div className="absolute top-4 right-4 z-10 flex items-center gap-2 bg-white rounded-lg shadow-lg p-2">
+    <div className="relative w-full h-full flex flex-col overflow-hidden">
+      {/* Control Bar - fixed position */}
+      <div className="absolute top-4 right-4 z-20 flex items-center gap-2 bg-white rounded-lg shadow-lg p-2">
         <button
           onClick={handleZoomOut}
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          title="Zoom Out (-)"
+          title="缩小 (-)"
         >
           <ZoomOut className="w-5 h-5" />
         </button>
@@ -96,7 +143,7 @@ export const ZoomablePreview: React.FC<ZoomablePreviewProps> = ({ children }) =>
         <button
           onClick={handleZoomIn}
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          title="Zoom In (+)"
+          title="放大 (+)"
         >
           <ZoomIn className="w-5 h-5" />
         </button>
@@ -104,24 +151,32 @@ export const ZoomablePreview: React.FC<ZoomablePreviewProps> = ({ children }) =>
         <div className="w-px h-6 bg-gray-300 mx-1" />
         
         <button
+          onClick={handleFitToScreen}
+          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          title="适应屏幕 (F)"
+        >
+          <Maximize className="w-5 h-5" />
+        </button>
+        
+        <button
           onClick={handleReset}
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          title="Reset View (0)"
+          title="重置 50% (0)"
         >
           <RotateCcw className="w-5 h-5" />
         </button>
       </div>
 
       {/* Hint */}
-      <div className="absolute bottom-4 left-4 z-10 text-xs text-gray-500 bg-white/80 px-2 py-1 rounded">
+      <div className="absolute bottom-4 left-4 z-20 text-xs text-gray-500 bg-white/80 px-2 py-1 rounded">
         <Move className="w-3 h-3 inline mr-1" />
-        拖拽移动 | Ctrl+滚轮缩放 | +/- 缩放
+        拖拽移动 | Shift+滚轮缩放 | F 适应屏幕
       </div>
 
       {/* Zoomable Container */}
       <div
         ref={containerRef}
-        className="flex-1 overflow-hidden cursor-grab active:cursor-grabbing"
+        className="flex-1 overflow-hidden cursor-grab active:cursor-grabbing flex items-center justify-center"
         onWheel={handleWheel}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -129,7 +184,6 @@ export const ZoomablePreview: React.FC<ZoomablePreviewProps> = ({ children }) =>
         onMouseLeave={handleMouseLeave}
       >
         <div
-          className="w-full h-full flex items-center justify-center"
           style={{
             transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
             transformOrigin: 'center center',

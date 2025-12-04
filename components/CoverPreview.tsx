@@ -22,8 +22,13 @@ export const CoverPreview = forwardRef<HTMLDivElement, CoverPreviewProps>(({ dat
       */}
       <div 
         ref={ref}
-        className="bg-white text-black shadow-2xl print:shadow-none w-[210mm] h-[297mm] p-[36mm] flex flex-col items-center relative box-border"
-        style={{ fontFamily: '"Times New Roman", "SimSun", "Noto Serif SC", serif' }}
+        className="bg-white text-black shadow-2xl print:shadow-none flex flex-col items-center relative box-border"
+        style={{ 
+          fontFamily: '"Times New Roman", "SimSun", "Noto Serif SC", serif',
+          width: '210mm',
+          height: '297mm',
+          padding: '36mm',
+        }}
       >
         {/* 1. Top Header Image (University Name) */}
         <div className="flex justify-center">
