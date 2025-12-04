@@ -9,6 +9,12 @@ const App: React.FC = () => {
   const coverRef = useRef<HTMLDivElement>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // Get current date for default values
+  const today = new Date();
+  const currentYear = today.getFullYear().toString();
+  const currentMonth = (today.getMonth() + 1).toString();
+  const currentDay = today.getDate().toString();
+
   // Initial State based on reference image
   const [data, setData] = useState<CoverData>({
     title: '缓冲区溢出攻击',
@@ -17,9 +23,9 @@ const App: React.FC = () => {
     studentId: '2022114514',
     name: '井芹 仁菜',
     department: '计算机学院（国家示范性软件学院）',
-    dateYear: '2025',
-    dateMonth: '12',
-    dateDay: '1',
+    dateYear: currentYear,
+    dateMonth: currentMonth,
+    dateDay: currentDay,
     headerImage: null,
     logoImage: null,
   });
