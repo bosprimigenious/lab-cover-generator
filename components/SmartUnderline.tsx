@@ -42,7 +42,7 @@ export const SmartUnderline: React.FC<SmartUnderlineProps> = ({
         leading-normal: prevents clipping of descenders
       */}
       <div 
-        className="border-b-[1.5px] border-black px-2 leading-normal text-center"
+        className="border-b-[1.5px] border-black px-2 leading-normal text-center whitespace-pre-wrap"
         style={{ 
           minWidth: minWidth,
         }}
