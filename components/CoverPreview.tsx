@@ -9,20 +9,6 @@ interface CoverPreviewProps {
 
 // ForwardRef allows the parent to capture this DOM element for html2canvas
 export const CoverPreview = forwardRef<HTMLDivElement, CoverPreviewProps>(({ data, config }, ref) => {
-  
-  // Default placeholder if no image uploaded
-  const DefaultHeader = () => (
-    <div className="w-full h-full flex items-center justify-center border-2 border-dashed border-gray-300 text-gray-400 font-sans text-sm">
-      University Header Image (Upload in Sidebar)
-    </div>
-  );
-
-  const DefaultLogo = () => (
-    <div className="w-full h-full rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 font-sans text-xs text-center p-2">
-      Logo (Upload)
-    </div>
-  );
-
   return (
     <div className="flex justify-center my-8 print:my-0">
       {/* 
@@ -41,28 +27,17 @@ export const CoverPreview = forwardRef<HTMLDivElement, CoverPreviewProps>(({ dat
       >
         {/* 1. Top Header Image (University Name) */}
         <div className="w-[80%] h-[80px] mb-10 flex justify-center">
-          {data.headerImage ? (
-            <img src={data.headerImage} alt="Header" className="h-full object-contain" />
-          ) : (
-            <div className="text-center">
-               {/* Visual Placeholder text mimicking the calligraphy if no image */}
-               <h1 className="text-[36pt] font-bold tracking-widest">北京邮电大学</h1>
-            </div>
-          )}
+          <img src="/assets/bupt-title.png" alt="北京邮电大学" className="h-full object-contain" />
         </div>
 
         {/* 2. Main Title */}
         <div className="mb-8">
-            <h2 className="text-[32pt] font-bold tracking-[0.5em] text-center">实验报告</h2>
+            <h2 className="text-[32pt] font-bold text-center">实验报告</h2>
         </div>
 
         {/* 3. Logo */}
         <div className="w-[120px] h-[120px] mb-16">
-          {data.logoImage ? (
-            <img src={data.logoImage} alt="Logo" className="w-full h-full object-contain" />
-          ) : (
-            <DefaultLogo />
-          )}
+          <img src="/assets/bupt-logo.png" alt="Logo" className="w-full h-full object-contain" />
         </div>
 
         {/* 4. Form Area */}
@@ -83,42 +58,36 @@ export const CoverPreview = forwardRef<HTMLDivElement, CoverPreviewProps>(({ dat
           <div className="flex flex-col space-y-4 items-center">
              
              <SmartUnderline 
-               label="班　级" 
+               label="班　　级：" 
                value={data.className} 
                minWidth={config.fieldMinWidth} 
-               labelWidth="60px" // Fixed width for alignment
-               fontSize="text-[14pt]" // No. 4
+               labelWidth="80px"
+               fontSize="text-[14pt]"
              />
 
             <SmartUnderline 
-               label="学　号" 
+               label="学　　号：" 
                value={data.studentId} 
                minWidth={config.fieldMinWidth} 
-               labelWidth="60px"
+               labelWidth="80px"
                fontSize="text-[14pt]" 
              />
 
             <SmartUnderline 
-               label="姓　名" 
+               label="姓　　名：" 
                value={data.name} 
                minWidth={config.fieldMinWidth} 
-               labelWidth="60px"
+               labelWidth="80px"
                fontSize="text-[14pt]" 
              />
 
-            {/* Department is often longer, might need custom handling or just same width */}
-            <div className="flex items-baseline gap-2 text-[14pt]">
-                <span className="font-bold whitespace-nowrap" style={{width: '60px', textAlign: 'justify', textAlignLast: 'justify'}}>
-                  学　院
-                </span>
-                <span className="font-bold">:</span>
-                <div 
-                    className="border-b-[1.5px] border-black px-2 pb-2 leading-normal text-center whitespace-nowrap"
-                    style={{ minWidth: '300px' }}
-                >
-                    {data.department}
-                </div>
-            </div>
+            <SmartUnderline 
+               label="学　　院：" 
+               value={data.department} 
+               minWidth="300px"
+               labelWidth="80px"
+               fontSize="text-[14pt]" 
+             />
 
           </div>
         </div>
