@@ -4,6 +4,7 @@ import { CoverPreview } from './components/CoverPreview';
 import { ZoomablePreview } from './components/ZoomablePreview';
 import { CoverData, SmartLineConfig, getCoverLabel } from './types';
 import { generateCoverPDF, generateCoverPDFViaPrint, mergePdf, downloadBlob } from './services/pdfService';
+import { generateCoverDocx, downloadWord } from './services/wordService';
 import html2canvas from 'html2canvas';
 
 const App: React.FC = () => {
@@ -12,19 +13,20 @@ const App: React.FC = () => {
 
   const [data, setData] = useState<CoverData>({
     template: 'lab-sheet',
-    title: '',
-    courseName: '具身智能安全',
-    major: '信息安全',
-    className: '2025211806',
+    title: '示例实验项目：数据加密与安全防护',
+    courseName: '示例实验课程',
+    major: '',
+    className: '',
     labHours: '4学时',
-    instructor: '雷敏',
+    instructor: '示例教师',
     grade: '',
-    course: '',
+    course: '示例实验课程',
     members: [
-      { studentId: '2025211884', name: '肖又铭', className: '', department: '', major: '' },
-      { studentId: '2025211885', name: '李四', className: '', department: '', major: '' },
-      { studentId: '2025211886', name: '王五', className: '', department: '', major: '' },
-      { studentId: '2025211887', name: '赵六', className: '', department: '', major: '' },
+      { studentId: '2025000001', name: '张三', className: '2025000001', department: '', major: '示例专业 A' },
+      { studentId: '2025000002', name: '李四', className: '2025000002', department: '', major: '示例专业 B' },
+      { studentId: '2025000003', name: '王五', className: '2025000003', department: '', major: '示例专业 A' },
+      { studentId: '2025000004', name: '赵六', className: '2025000004', department: '', major: '示例专业 C' },
+      { studentId: '2025000005', name: '孙七', className: '2025000005', department: '', major: '示例专业 B' },
     ],
     dateYear: '2026',
     dateMonth: '5',
@@ -62,6 +64,20 @@ const App: React.FC = () => {
     generateCoverPDFViaPrint(coverRef.current);
   };
 
+  // Handler: Download Word
+  const handleDownloadWord = async () => {
+    setIsProcessing(true);
+    try {
+      const blob = await generateCoverDocx(data);
+      downloadWord(blob, `Cover_${getCoverLabel(data)}.docx`);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to generate Word document.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   // Handler: Merge PDF
   const handleMergePdf = async (file: File) => {
     if (!coverRef.current) return;
@@ -92,6 +108,7 @@ const App: React.FC = () => {
         config={config}
         setConfig={setConfig}
         onDownloadImage={handleDownloadImage}
+        onDownloadWord={handleDownloadWord}
         onPrintPdf={handlePrintPdf}
         onMergePdf={handleMergePdf}
         isProcessing={isProcessing}
