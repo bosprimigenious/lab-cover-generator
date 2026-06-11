@@ -22,25 +22,23 @@ export const SmartUnderline: React.FC<SmartUnderlineProps> = ({
   align = 'center',
   className = '',
   labelWidth = 'auto',
-  fontSize = 'text-[14pt]', // Default No. 4 size
+  fontSize = 'text-[14pt]',
 }) => {
-  const textAlign = align === 'left' ? 'text-left' : align === 'right' ? 'text-right' : 'text-center';
+  const isFormRow = align === 'left';
 
   return (
-    <div className={`flex items-baseline gap-2 ${className} ${fontSize} ${align === 'left' ? 'w-full' : ''}`}>
+    <div className={`flex items-baseline gap-2 ${className} ${fontSize} ${isFormRow ? 'w-full' : ''}`}>
       {label && (
-        <span 
+        <span
           className="font-serif leading-normal whitespace-nowrap font-bold flex-shrink-0"
           style={{ width: labelWidth }}
         >
           {label}
         </span>
       )}
-      <div 
-        className={`border-b-[1.5px] border-black px-2 pb-2 leading-normal whitespace-pre-wrap ${textAlign} ${align === 'left' ? 'flex-1' : ''}`}
-        style={{ 
-          minWidth: minWidth,
-        }}
+      <div
+        className={`border-b-[1.5px] border-black px-2 pb-2 leading-normal whitespace-pre-wrap text-center ${isFormRow ? 'flex-1' : ''}`}
+        style={{ minWidth }}
       >
         <span className="font-serif font-bold">{value || '\u00A0'}</span>
       </div>
