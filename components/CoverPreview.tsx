@@ -15,24 +15,24 @@ const MemberTable: React.FC<{ members: CoverData['members'] }> = ({ members }) =
       成　　员：
     </div>
     <table
-      className="w-full text-[11pt] font-serif font-bold border-collapse"
+      className="w-full text-center text-[11pt] font-serif font-bold border-collapse"
       style={{ fontFamily: SERIF }}
     >
       <thead>
         <tr className="border-b-[1.5px] border-black">
-          <th className="text-left pb-1.5 pr-2 font-bold w-[24%]">学号</th>
-          <th className="text-left pb-1.5 pr-2 font-bold w-[14%]">姓名</th>
-          <th className="text-left pb-1.5 pr-2 font-bold w-[22%]">班级</th>
-          <th className="text-left pb-1.5 font-bold">学院</th>
+          <th className="pb-1.5 px-1 font-bold w-[24%]">学号</th>
+          <th className="pb-1.5 px-1 font-bold w-[14%]">姓名</th>
+          <th className="pb-1.5 px-1 font-bold w-[22%]">班级</th>
+          <th className="pb-1.5 px-1 font-bold">学院</th>
         </tr>
       </thead>
       <tbody>
         {members.map((member, index) => (
           <tr key={index} className="border-b border-black/40">
-            <td className="py-1.5 pr-2 align-top">{member.studentId || '\u00A0'}</td>
-            <td className="py-1.5 pr-2 align-top">{member.name || '\u00A0'}</td>
-            <td className="py-1.5 pr-2 align-top">{member.className || '\u00A0'}</td>
-            <td className="py-1.5 align-top leading-snug">{member.department || '\u00A0'}</td>
+            <td className="py-1.5 px-1 align-middle">{member.studentId || '\u00A0'}</td>
+            <td className="py-1.5 px-1 align-middle">{member.name || '\u00A0'}</td>
+            <td className="py-1.5 px-1 align-middle">{member.className || '\u00A0'}</td>
+            <td className="py-1.5 px-1 align-middle leading-snug">{member.department || '\u00A0'}</td>
           </tr>
         ))}
       </tbody>
@@ -44,31 +44,35 @@ const SingleMemberFields: React.FC<{
   member: CoverData['members'][0];
   config: SmartLineConfig;
 }> = ({ member, config }) => (
-  <div className="flex flex-col space-y-4 items-start pl-[15%]">
-    <SmartUnderline label="班　　级：" value={member.className} minWidth={config.fieldMinWidth} labelWidth="80px" fontSize="text-[14pt]" />
-    <SmartUnderline label="学　　号：" value={member.studentId} minWidth={config.fieldMinWidth} labelWidth="80px" fontSize="text-[14pt]" />
-    <SmartUnderline label="姓　　名：" value={member.name} minWidth={config.fieldMinWidth} labelWidth="80px" fontSize="text-[14pt]" />
-    <SmartUnderline label="学　　院：" value={member.department} minWidth={config.fieldMinWidth} labelWidth="80px" fontSize="text-[14pt]" />
+  <div className="flex flex-col space-y-4 items-start pl-[15%] w-full">
+    <SmartUnderline label="班　　级：" value={member.className} minWidth={config.fieldMinWidth} labelWidth="80px" fontSize="text-[14pt]" align="left" />
+    <SmartUnderline label="学　　号：" value={member.studentId} minWidth={config.fieldMinWidth} labelWidth="80px" fontSize="text-[14pt]" align="left" />
+    <SmartUnderline label="姓　　名：" value={member.name} minWidth={config.fieldMinWidth} labelWidth="80px" fontSize="text-[14pt]" align="left" />
+    <SmartUnderline label="学　　院：" value={member.department} minWidth={config.fieldMinWidth} labelWidth="80px" fontSize="text-[14pt]" align="left" />
   </div>
 );
 
 const LabSheetMemberTable: React.FC<{ members: CoverData['members'] }> = ({ members }) => (
-  <div className="w-full max-w-[420px]">
+  <div className="w-full max-w-[480px]">
     <table
-      className="w-full text-[13pt] font-serif font-bold border-collapse"
+      className="w-full text-center text-[10pt] font-serif font-bold border-collapse"
       style={{ fontFamily: SERIF }}
     >
       <thead>
         <tr className="border-b-[1.5px] border-black">
-          <th className="text-left pb-1.5 pr-4 font-bold w-1/2">姓　　名</th>
-          <th className="text-left pb-1.5 font-bold w-1/2">学　　号</th>
+          <th className="pb-1.5 px-1 font-bold w-[14%]">姓　名</th>
+          <th className="pb-1.5 px-1 font-bold w-[26%]">学　号</th>
+          <th className="pb-1.5 px-1 font-bold w-[24%]">班　级</th>
+          <th className="pb-1.5 px-1 font-bold">专　业</th>
         </tr>
       </thead>
       <tbody>
         {members.map((member, index) => (
           <tr key={index} className="border-b border-black/40">
-            <td className="py-1.5 pr-4 align-top">{member.name || '\u00A0'}</td>
-            <td className="py-1.5 align-top">{member.studentId || '\u00A0'}</td>
+            <td className="py-1 px-1 align-middle">{member.name || '\u00A0'}</td>
+            <td className="py-1 px-1 align-middle">{member.studentId || '\u00A0'}</td>
+            <td className="py-1 px-1 align-middle">{member.className || '\u00A0'}</td>
+            <td className="py-1 px-1 align-middle leading-snug">{member.major || '\u00A0'}</td>
           </tr>
         ))}
       </tbody>
@@ -80,11 +84,6 @@ const LabSheetFields: React.FC<{
   data: CoverData;
   config: SmartLineConfig;
 }> = ({ data, config }) => {
-  const staticFields: { label: string; value: string }[] = [
-    { label: '专　　业：', value: data.major },
-    { label: '班　　级：', value: data.className },
-  ];
-
   const footerFields: { label: string; value: string }[] = [
     { label: '实验学时：', value: data.labHours },
     { label: '指导教师：', value: data.instructor },
@@ -93,7 +92,7 @@ const LabSheetFields: React.FC<{
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="w-full max-w-[420px] mb-8">
+      <div className="flex flex-col space-y-[18px] items-start w-full max-w-[480px]">
         <SmartUnderline
           label="实验课程名称"
           value={data.courseName}
@@ -102,10 +101,8 @@ const LabSheetFields: React.FC<{
           labelWidth="auto"
           align="left"
         />
-      </div>
 
-      <div className="flex flex-col space-y-[18px] items-start w-full max-w-[420px]">
-        {staticFields.map(({ label, value }) => (
+        {footerFields.map(({ label, value }) => (
           <SmartUnderline
             key={label}
             label={label}
@@ -120,18 +117,6 @@ const LabSheetFields: React.FC<{
         <div className="w-full pt-1 pb-1">
           <LabSheetMemberTable members={data.members} />
         </div>
-
-        {footerFields.map(({ label, value }) => (
-          <SmartUnderline
-            key={label}
-            label={label}
-            value={value}
-            minWidth={config.fieldMinWidth}
-            labelWidth="100px"
-            fontSize="text-[14pt]"
-            align="left"
-          />
-        ))}
       </div>
     </div>
   );
@@ -177,9 +162,9 @@ export const CoverPreview = forwardRef<HTMLDivElement, CoverPreviewProps>(({ dat
           />
         </div>
 
-        {!isLabSheet && <ReportHeader isGroup={isGroup} logoImage={data.logoImage} />}
+        <ReportHeader isGroup={isLabSheet || isGroup} logoImage={data.logoImage} />
 
-        <div className={`w-full flex flex-col items-center flex-1 ${isLabSheet ? 'justify-center' : 'space-y-5'}`}>
+        <div className={`w-full flex flex-col items-center flex-1 ${isLabSheet ? 'justify-start' : 'space-y-5'}`}>
           {isLabSheet ? (
             <LabSheetFields data={data} config={config} />
           ) : (
