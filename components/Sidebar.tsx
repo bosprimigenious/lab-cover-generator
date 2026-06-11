@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { CoverData, SmartLineConfig, Member, createEmptyMember, CoverTemplate } from '../types';
-import { Download, FileText, Image as ImageIcon, Printer, Plus, Trash2 } from 'lucide-react';
+import { Download, FileText, Image as ImageIcon, Printer, Plus, Trash2, FileType } from 'lucide-react';
 
 const MAX_MEMBERS = 6;
 
@@ -10,6 +10,7 @@ interface SidebarProps {
   config: SmartLineConfig;
   setConfig: React.Dispatch<React.SetStateAction<SmartLineConfig>>;
   onDownloadImage: () => void;
+  onDownloadWord: () => void;
   onPrintPdf: () => void;
   onMergePdf: (file: File) => void;
   isProcessing: boolean;
@@ -21,6 +22,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   config,
   setConfig,
   onDownloadImage,
+  onDownloadWord,
   onPrintPdf,
   onMergePdf,
   isProcessing
@@ -124,24 +126,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   className="w-full p-2 border border-gray-300 rounded"
                 />
               </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">专业</label>
-                <input
-                  type="text"
-                  value={data.major}
-                  onChange={(e) => handleChange('major', e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">班级</label>
-                <input
-                  type="text"
-                  value={data.className}
-                  onChange={(e) => handleChange('className', e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">实验学时</label>
@@ -225,6 +209,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           className="w-full p-1.5 text-sm border border-gray-300 rounded"
                         />
                       </div>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-medium text-gray-600 mb-0.5">班级</label>
+                      <input
+                        type="text"
+                        value={member.className}
+                        onChange={(e) => handleMemberChange(index, 'className', e.target.value)}
+                        className="w-full p-1.5 text-sm border border-gray-300 rounded"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-medium text-gray-600 mb-0.5">专业</label>
+                      <input
+                        type="text"
+                        value={member.major}
+                        onChange={(e) => handleMemberChange(index, 'major', e.target.value)}
+                        className="w-full p-1.5 text-sm border border-gray-300 rounded"
+                      />
                     </div>
                   </div>
                 ))}
@@ -411,6 +413,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
         >
           <Download className="w-5 h-5 mr-2" />
           Download Cover Image (PNG)
+        </button>
+
+        <button 
+            onClick={onDownloadWord}
+            disabled={isProcessing}
+            className="w-full flex items-center justify-center px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg shadow-sm hover:bg-gray-50 transition-colors font-medium disabled:opacity-50"
+        >
+          <FileType className="w-5 h-5 mr-2" />
+          Download Cover (Word)
         </button>
 
         <button 
