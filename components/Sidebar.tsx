@@ -1,6 +1,8 @@
-import React, { useRef, useState } from 'react';
-import { CoverData, SmartLineConfig } from '../types';
-import { Download, FileText, Image as ImageIcon, Settings, Upload, Printer } from 'lucide-react';
+import React, { useRef } from 'react';
+import { CoverData, SmartLineConfig, Member, createEmptyMember, CoverTemplate } from '../types';
+import { Download, FileText, Image as ImageIcon, Printer, Plus, Trash2 } from 'lucide-react';
+
+const MAX_MEMBERS = 6;
 
 interface SidebarProps {
   data: CoverData;
@@ -25,8 +27,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const pdfInputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (field: keyof CoverData, value: string) => {
+  const handleChange = (field: keyof Omit<CoverData, 'members'>, value: string) => {
     setData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleMemberChange = (index: number, field: keyof Member, value: string) => {
+    setData(prev => ({
+      ...prev,
+      members: prev.members.map((member, i) =>
+        i === index ? { ...member, [field]: value } : member
+      ),
+    }));
+  };
+
+  const handleAddMember = () => {
+    setData(prev => {
+      if (prev.members.length >= MAX_MEMBERS) return prev;
+      return { ...prev, members: [...prev.members, createEmptyMember()] };
+    });
+  };
+
+  const handleRemoveMember = (index: number) => {
+    setData(prev => {
+      if (prev.members.length <= 1) return prev;
+      return { ...prev, members: prev.members.filter((_, i) => i !== index) };
+    });
   };
 
   const handleImageUpload = (field: 'headerImage' | 'logoImage', e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,64 +86,252 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       <div className="p-6 space-y-6 flex-grow">
-        
-        {/* Section: Basic Info */}
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Student Details</h3>
-          
-          <div className="grid grid-cols-1 gap-3">
-             <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Title (题目)</label>
-                <input 
-                  type="text" 
-                  value={data.title}
-                  onChange={(e) => handleChange('title', e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-             </div>
 
-             <div className="grid grid-cols-2 gap-2">
-               <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Class (班级)</label>
-                  <input 
-                    type="text" 
-                    value={data.className}
-                    onChange={(e) => handleChange('className', e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-               </div>
-               <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">ID (学号)</label>
-                  <input 
-                    type="text" 
-                    value={data.studentId}
-                    onChange={(e) => handleChange('studentId', e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-               </div>
-             </div>
-
-             <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Name (姓名)</label>
-                <input 
-                  type="text" 
-                  value={data.name}
-                  onChange={(e) => handleChange('name', e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-             </div>
-
-             <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Department (学院)</label>
-                <input 
-                  type="text" 
-                  value={data.department}
-                  onChange={(e) => handleChange('department', e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-             </div>
+        {/* Section: Template */}
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Template</h3>
+          <div className="grid grid-cols-2 gap-2">
+            {([
+              { id: 'lab-sheet' as CoverTemplate, label: '实验课封面' },
+              { id: 'report' as CoverTemplate, label: '实验报告' },
+            ]).map(({ id, label }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setData(prev => ({ ...prev, template: id }))}
+                className={`px-3 py-2 text-sm rounded border transition-colors ${
+                  data.template === id
+                    ? 'bg-blue-600 text-white border-blue-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
+
+        {data.template === 'lab-sheet' ? (
+          <>
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Course Info</h3>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">实验课程名称</label>
+                <input
+                  type="text"
+                  value={data.courseName}
+                  onChange={(e) => handleChange('courseName', e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">专业</label>
+                <input
+                  type="text"
+                  value={data.major}
+                  onChange={(e) => handleChange('major', e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">班级</label>
+                <input
+                  type="text"
+                  value={data.className}
+                  onChange={(e) => handleChange('className', e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">实验学时</label>
+                  <input
+                    type="text"
+                    value={data.labHours}
+                    onChange={(e) => handleChange('labHours', e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded"
+                    placeholder="4学时"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">指导教师</label>
+                  <input
+                    type="text"
+                    value={data.instructor}
+                    onChange={(e) => handleChange('instructor', e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">成绩（可留空）</label>
+                <input
+                  type="text"
+                  value={data.grade}
+                  onChange={(e) => handleChange('grade', e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+                  成员 ({data.members.length})
+                </h3>
+                <button
+                  type="button"
+                  onClick={handleAddMember}
+                  disabled={data.members.length >= MAX_MEMBERS}
+                  className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 disabled:text-gray-400 disabled:cursor-not-allowed"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  添加
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                {data.members.map((member, index) => (
+                  <div key={index} className="border border-gray-200 rounded-lg p-3 bg-white space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-gray-600">成员 {index + 1}</span>
+                      {data.members.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveMember(index)}
+                          className="text-gray-400 hover:text-red-500 transition-colors"
+                          title="删除成员"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="block text-[10px] font-medium text-gray-600 mb-0.5">姓名</label>
+                        <input
+                          type="text"
+                          value={member.name}
+                          onChange={(e) => handleMemberChange(index, 'name', e.target.value)}
+                          className="w-full p-1.5 text-sm border border-gray-300 rounded"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-medium text-gray-600 mb-0.5">学号</label>
+                        <input
+                          type="text"
+                          value={member.studentId}
+                          onChange={(e) => handleMemberChange(index, 'studentId', e.target.value)}
+                          className="w-full p-1.5 text-sm border border-gray-300 rounded"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+        {/* Section: Basic Info */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Report Info</h3>
+
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">Title (题目)</label>
+            <input
+              type="text"
+              value={data.title}
+              onChange={(e) => handleChange('title', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+
+        {/* Section: Members */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+              Members ({data.members.length})
+            </h3>
+            <button
+              type="button"
+              onClick={handleAddMember}
+              disabled={data.members.length >= MAX_MEMBERS}
+              className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 disabled:text-gray-400 disabled:cursor-not-allowed"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              添加
+            </button>
+          </div>
+
+          <p className="text-[11px] text-gray-500 leading-relaxed">
+            2 人及以上时，封面以成员表格展示（学号 / 姓名 / 班级 / 学院），适合跨学院小组。
+          </p>
+
+          <div className="space-y-3">
+            {data.members.map((member, index) => (
+              <div key={index} className="border border-gray-200 rounded-lg p-3 bg-white space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-gray-600">成员 {index + 1}</span>
+                  {data.members.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveMember(index)}
+                      className="text-gray-400 hover:text-red-500 transition-colors"
+                      title="删除成员"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[10px] font-medium text-gray-600 mb-0.5">学号</label>
+                    <input
+                      type="text"
+                      value={member.studentId}
+                      onChange={(e) => handleMemberChange(index, 'studentId', e.target.value)}
+                      className="w-full p-1.5 text-sm border border-gray-300 rounded"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-medium text-gray-600 mb-0.5">姓名</label>
+                    <input
+                      type="text"
+                      value={member.name}
+                      onChange={(e) => handleMemberChange(index, 'name', e.target.value)}
+                      className="w-full p-1.5 text-sm border border-gray-300 rounded"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-medium text-gray-600 mb-0.5">班级</label>
+                  <input
+                    type="text"
+                    value={member.className}
+                    onChange={(e) => handleMemberChange(index, 'className', e.target.value)}
+                    className="w-full p-1.5 text-sm border border-gray-300 rounded"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-medium text-gray-600 mb-0.5">学院</label>
+                  <input
+                    type="text"
+                    value={member.department}
+                    onChange={(e) => handleMemberChange(index, 'department', e.target.value)}
+                    className="w-full p-1.5 text-sm border border-gray-300 rounded"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+          </>
+        )}
 
         {/* Section: Date */}
         <div className="space-y-4">

@@ -24,9 +24,10 @@ export const SmartUnderline: React.FC<SmartUnderlineProps> = ({
   labelWidth = 'auto',
   fontSize = 'text-[14pt]', // Default No. 4 size
 }) => {
+  const textAlign = align === 'left' ? 'text-left' : align === 'right' ? 'text-right' : 'text-center';
+
   return (
-    // changed items-end to items-baseline to ensure text aligns on the baseline
-    <div className={`flex items-baseline gap-2 ${className} ${fontSize}`}>
+    <div className={`flex items-baseline gap-2 ${className} ${fontSize} ${align === 'left' ? 'w-full' : ''}`}>
       {label && (
         <span 
           className="font-serif leading-normal whitespace-nowrap font-bold flex-shrink-0"
@@ -35,15 +36,8 @@ export const SmartUnderline: React.FC<SmartUnderlineProps> = ({
           {label}
         </span>
       )}
-      {/* 
-        The actual underline container.
-        flex-grow: allows it to take remaining space if needed (optional behavior)
-        min-width: ensures strict adherence to the requested line length
-        pb-2: increased padding to prevent line from crossing text
-        leading-normal: prevents clipping of descenders
-      */}
       <div 
-        className="border-b-[1.5px] border-black px-2 pb-2 leading-normal text-center whitespace-pre-wrap"
+        className={`border-b-[1.5px] border-black px-2 pb-2 leading-normal whitespace-pre-wrap ${textAlign} ${align === 'left' ? 'flex-1' : ''}`}
         style={{ 
           minWidth: minWidth,
         }}

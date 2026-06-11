@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { CoverPreview } from './components/CoverPreview';
 import { ZoomablePreview } from './components/ZoomablePreview';
-import { CoverData, SmartLineConfig } from './types';
+import { CoverData, SmartLineConfig, getCoverLabel } from './types';
 import { generateCoverPDF, generateCoverPDFViaPrint, mergePdf, downloadBlob } from './services/pdfService';
 import html2canvas from 'html2canvas';
 
@@ -10,23 +10,25 @@ const App: React.FC = () => {
   const coverRef = useRef<HTMLDivElement>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Get current date for default values
-  const today = new Date();
-  const currentYear = today.getFullYear().toString();
-  const currentMonth = (today.getMonth() + 1).toString();
-  const currentDay = today.getDate().toString();
-
-  // Initial State based on reference image
   const [data, setData] = useState<CoverData>({
-    title: '缓冲区溢出攻击',
-    course: '网络安全',
-    className: '2024233333',
-    studentId: '2022114514',
-    name: '井芹  仁菜',
-    department: '计算机学院（国家示范性软件学院）',
-    dateYear: currentYear,
-    dateMonth: currentMonth,
-    dateDay: currentDay,
+    template: 'lab-sheet',
+    title: '',
+    courseName: '具身智能安全',
+    major: '信息安全',
+    className: '2025211806',
+    labHours: '4学时',
+    instructor: '雷敏',
+    grade: '',
+    course: '',
+    members: [
+      { studentId: '2025211884', name: '肖又铭', className: '', department: '', major: '' },
+      { studentId: '2025211885', name: '李四', className: '', department: '', major: '' },
+      { studentId: '2025211886', name: '王五', className: '', department: '', major: '' },
+      { studentId: '2025211887', name: '赵六', className: '', department: '', major: '' },
+    ],
+    dateYear: '2026',
+    dateMonth: '5',
+    dateDay: '29',
     headerImage: null,
     logoImage: null,
   });
@@ -43,7 +45,7 @@ const App: React.FC = () => {
     try {
       const canvas = await html2canvas(coverRef.current, { scale: 2 });
       const link = document.createElement('a');
-      link.download = `Cover_${data.name || 'LabReport'}.png`;
+      link.download = `Cover_${getCoverLabel(data)}.png`;
       link.href = canvas.toDataURL();
       link.click();
     } catch (err) {
@@ -72,7 +74,7 @@ const App: React.FC = () => {
       const mergedPdfBytes = await mergePdf(coverBuffer, file);
       
       // 3. Download result
-      downloadBlob(mergedPdfBytes, `Report_Complete_${data.name || 'Merged'}.pdf`);
+      downloadBlob(mergedPdfBytes, `Report_Complete_${getCoverLabel(data)}.pdf`);
     } catch (err) {
       console.error(err);
       alert('Failed to merge PDF. Please ensure your uploaded file is valid.');
